@@ -1,0 +1,1 @@
+Requires python 3.14 or higher and pandas.
