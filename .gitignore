@@ -1,7 +1,6 @@
 
 # Large data files — download separately from Hugging Face
 metraq_air_quality.csv
-sample_madrid_air_quality.csv
 
 # Generated cache directories — auto-created by the notebook
 data_by_year/
