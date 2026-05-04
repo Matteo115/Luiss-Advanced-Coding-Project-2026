@@ -12,14 +12,8 @@ A reproducible analytics pipeline for the **METRAQ Air Quality Dataset** (Madrid
 ├── worker.py                  # standalone correlation-matrix worker for Task 8
 ├── metraq_air_quality.csv     # input data (download separately, see below)
 ├── requirements.txt           # pinned dependencies
-├── README.md                  # this file
-├── imputation_results/        # auto-created by Task 3 (per-magnitude parquets)
-├── data_by_year/              # auto-created by Task 8 (per-year parquets)
-├── correlation_matrices/      # auto-created by Task 8 (per-(year,sensor) matrices)
-└── outputs/                   # auto-created by Task 10 (final figures)
+└── README.md                  # this file
 ```
-
-The `*_results/`, `*_by_year/`, `*_matrices/` and `outputs/` folders are intermediate caches and final figure outputs written by the notebook itself. They will be created on first run; you do not need to set them up manually.
 
 ---
 
@@ -42,20 +36,6 @@ The full dataset (~64 M rows, ~3 GB CSV) is not included in the submission. Down
 - <https://huggingface.co/datasets/dmariaa70/METRAQ-Air-Quality>
 
 Place the resulting CSV in the project root and rename it to `metraq_air_quality.csv` if necessary. The notebook expects exactly this filename in the working directory (cell 2 of `main.ipynb`).
-
-To do a quick smoke-test on a smaller file before processing the full 3 GB CSV, you can use the project's `sample_madrid_air_quality.csv` (~100K rows), distributed alongside the spec — just point the `pd.read_csv` call at it.
-
-### 3. Verify
-
-A 30-second smoke test:
-
-```bash
-jupyter nbconvert --to notebook --execute main.ipynb \
-    --ExecutePreprocessor.timeout=60 \
-    --output smoke_test.ipynb
-```
-
-If cell 2 (the data load) runs without `FileNotFoundError`, you're set. The full notebook takes roughly 30–60 minutes end-to-end depending on hardware (most of the time is in Task 3's imputation, Task 8's correlation matrices, and Task 9's random forest fit).
 
 ---
 
@@ -104,6 +84,8 @@ The full methodology is documented in the markdown cells inside the notebook. A 
 ---
 
 ## Authors
+
+Matteo Bruni, Federico Romano Gargarella, Matteo Rapisarda.
 
 LUISS — Management and Computer Science, Advanced Coding for Data Analytics 2025/2026.
 
