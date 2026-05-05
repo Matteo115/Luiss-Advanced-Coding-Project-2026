@@ -2,7 +2,6 @@
 
 A reproducible analytics pipeline for the **METRAQ Air Quality Dataset** (Madrid, 2001–2024), covering data cleaning, imputation comparison, temporal analysis, spatial and correlation networks, parallelised correlation computation, a forecasting model for NO₂, and final visualisation.
 
----
 
 ## Project structure
 
@@ -15,7 +14,6 @@ A reproducible analytics pipeline for the **METRAQ Air Quality Dataset** (Madrid
 └── README.md                  # this file
 ```
 
----
 
 ## Setup
 
@@ -36,8 +34,6 @@ The full dataset (~64 M rows, ~3 GB CSV) is not included in the submission. Down
 - <https://huggingface.co/datasets/dmariaa70/METRAQ-Air-Quality>
 
 Place the resulting CSV in the project root and rename it to `metraq_air_quality.csv` if necessary. The notebook expects exactly this filename in the working directory (cell 2 of `main.ipynb`).
-
----
 
 ## Running the notebook
 
@@ -61,15 +57,11 @@ The pipeline carries state in memory across cells: the cleaned `df` from Task 2,
 
 For Task 8 specifically, the parallel section (`from worker import compute_correlation_matrix`) requires `worker.py` to live in the same directory as `main.ipynb` so the worker processes can import it.
 
----
-
 ## Reproducibility notes
 
 - **Random seeds** are set wherever sampling or stochastic fitting is done. The reference distribution for the KS test (Task 3) is sampled with `random_state=42`. The Random Forest in Task 9 is fit with `random_state=42`. All other methods (`LinearRegression`, `KNeighborsRegressor`, `linear` interpolation) are deterministic functions of their input data, so no further seeding is needed.
 - **Data caching.** Intermediate parquet files are written to disk once and read back in subsequent steps. This keeps memory flat (~7 M imputed rows would otherwise sit in RAM) and lets you re-run downstream cells without redoing the heavy work. Delete the `imputation_results/`, `data_by_year/` or `correlation_matrices/` folders to force a recompute.
-- **Hardware.** All cells run on a machine with ≥8 GB RAM. The Task 8 parallel run uses up to 10 worker processes; on machines with fewer cores, edit the `worker_counts` list in cell 91 to `[1, 2, 4]` or similar. The Task 9 random forest uses `n_jobs=-1` (all cores) with a memory footprint around 100 MB; if RAM is tight, change to `n_jobs=2` in the model-fit cell.
-
----
+- **Hardware.** All cells run on a machine with ≥32 GB RAM. The Task 8 parallel run uses up to 10 worker processes; on machines with fewer cores, edit the `worker_counts` list in cell 91 to `[1, 2, 4]` or similar. The Task 9 random forest uses `n_jobs=-1` (all cores) with a memory footprint around 100 MB; if RAM is tight, change to `n_jobs=2` in the model-fit cell.
 
 ## Methodology summary
 
@@ -79,9 +71,7 @@ The full methodology is documented in the markdown cells inside the notebook. A 
 - **Imputation evaluation (Task 3).** Each method is evaluated *purely*, with no cross-method fallback: where a method cannot produce a value for a row (e.g. linear interpolation on a long gap), we leave the row NaN rather than substituting another method's output. The KS scores therefore measure each method as itself. A separate coverage report quantifies the trade-off between imputation quality (KS) and imputation completeness.
 - **Final dataset construction (Task 4 Step 1).** A best-of-breed strategy: every missing row is initialised with its KNN imputation as a universal baseline (KNN has 100% coverage by construction), then overwritten with each variable's winning method (lowest KS in Task 3) wherever that winner produced a value. METRAQ wins ties within 0.01 KS units, since it uses real spatial neighbours that our purely-temporal methods do not access.
 - **Parallelisation (Task 8).** Each (year, sensor) correlation matrix is computed by an independent worker process that reads only its own slice of pre-partitioned per-year parquet files and writes the resulting matrix to disk. Speedup, efficiency and scaling vs the sequential baseline are reported.
-- **Forecasting (Task 9).** Hourly city-wide NO₂ is predicted from weather (`TEMP`, `HR`, `VV`, `RS`, `PRE`), traffic (`TI/SP/OC_KRIGING`) and calendar features (cyclical hour and month encodings, day-of-week, year). Other pollutants are deliberately excluded from the feature set — including `NOX` would inflate R² to a near-trivial number since `NOX = NO + NO₂` by definition. Train: 2019–2022, test: 2023, no shuffling. Linear regression is the interpretable baseline; Random Forest captures the threshold/interaction effects that linear cannot.
-
----
+- **Forecasting (Task 9).** Mothly city-wide NO₂ is predicted from weather (`TEMP`, `HR`, `VV`, `RS`, `PRE`), traffic (`TI/SP/OC_KRIGING`) and calendar features (month, year). Other pollutants are deliberately excluded from the feature set — including `NOX` would inflate R² to a near-trivial number since `NOX = NO + NO₂` by definition. Train: 2019–2022, test: 2023, no shuffling. Linear regression is the interpretable baseline; Random Forest captures the threshold/interaction effects that linear cannot.
 
 ## Authors
 
