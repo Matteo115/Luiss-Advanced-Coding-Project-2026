@@ -50,7 +50,7 @@ Open `main.ipynb` in Jupyter and run the cells **in order** from top to bottom. 
 - **Task 5** — build spatial graphs of the sensor network using two construction methods (distance threshold and k-nearest neighbours).
 - **Task 6** — build correlation networks per pollutant, compare them against the distance-based network, and run a sensitivity sweep.
 - **Task 8** — compute hourly correlation matrices for every (year, sensor) combination, sequentially and in parallel using `multiprocessing.Pool` with 1, 2, 4, 8 and 10 workers; report scaling and identify the variables most associated with NO₂.
-- **Task 9** *(optional)* — forecast hourly city-wide NO₂ on a held-out 2023 test set using only weather, traffic and calendar features (deliberately no other pollutants and no autoregressive features). Compare a linear regression baseline against a Random Forest to quantify how much of NO₂'s variance is explainable from confounding variables alone.
+- **Task 9** *(optional)* — forecast monthly city-wide NO₂ on a held-out 2023 test set using only weather, traffic and calendar features (deliberately no other pollutants and no autoregressive features). Compare a linear regression baseline against a Random Forest to quantify how much of NO₂'s variance is explainable from confounding variables alone.
 - **Task 10** — final four-panel visualisation (WHERE / WHEN / HOW / WHY) summarising the headline findings.
 
 Task 7 (propagation modelling) is marked optional in the project spec and is not implemented.
